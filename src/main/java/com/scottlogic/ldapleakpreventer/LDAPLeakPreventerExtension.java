@@ -35,24 +35,24 @@ import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.*;
 public class LDAPLeakPreventerExtension implements Extension {
     private static final Logger log = Logger.getLogger(LDAPLeakPreventerExtension.class.getPackage().getName());
 
-    static final String POOL_TIMEOUT_PROPERTY = "com.sun.jndi.ldap.connect.pool.timeout";
+    private static final String POOL_TIMEOUT_PROPERTY = "com.sun.jndi.ldap.connect.pool.timeout";
     private static final String LDAP_POOL_MANAGER_CLASS = "com.sun.jndi.ldap.LdapPoolManager";
 
     /** The namespace used for the {@code subsystem} element */
     private static final String NAMESPACE = "urn:scottlogic:ldapleakpreventer:1.0";
 
     /** The name of our subsystem within the model. */
-    static final String SUBSYSTEM_NAME = "ldapleakpreventer";
+    private static final String SUBSYSTEM_NAME = "ldapleakpreventer";
 
-    private final SubsystemParser parser = new SubsystemParser();
-    protected static final PathElement SUBSYSTEM_PATH = PathElement.pathElement(SUBSYSTEM, SUBSYSTEM_NAME);
-    static final String RESOURCE_NAME = LDAPLeakPreventerExtension.class.getPackage().getName() + ".LocalDescriptions";
-
+    private static final PathElement SUBSYSTEM_PATH = PathElement.pathElement(SUBSYSTEM, SUBSYSTEM_NAME);
+    private static final String RESOURCE_NAME = LDAPLeakPreventerExtension.class.getPackage().getName() + ".LocalDescriptions";
     private static final ResourceDefinition SUBSYSTEM_DEFINITION = new SimpleResourceDefinition(SUBSYSTEM_PATH,
             new StandardResourceDescriptionResolver(SUBSYSTEM_NAME, RESOURCE_NAME,
                     LDAPLeakPreventerExtension.class.getClassLoader(), true, false),
             SubsystemAdd.INSTANCE,
             SubsystemRemove.INSTANCE);
+
+    private final SubsystemParser parser = new SubsystemParser();
 
     @Override
     public void initializeParsers(ExtensionParsingContext context) {
@@ -69,6 +69,8 @@ public class LDAPLeakPreventerExtension implements Extension {
     }
 
     static void loadLdapPoolManagerClass() {
+        String property = System.getProperty(POOL_TIMEOUT_PROPERTY);
+        log.info("Loading LdapPoolManager class with timeout property configured to " + property + " ms");
         try {
             Class.forName(LDAP_POOL_MANAGER_CLASS);
             log.info("Loaded LdapPoolManager class");
