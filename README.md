@@ -9,6 +9,6 @@ Build and package the extension using `mvn package`. This command will create a 
 
 Edit the JBoss `standalone.xml` configuration file as follows:
   1. Add `<extension module="com.scottlogic.ldapleakpreventer"/>` to the `extensions` element.
-  1. Add <subsystem xmlns="urn:scottlogic:ldapleakpreventer:1.0"/> to the <profile> element.
+  1. Add <subsystem xmlns="urn:scottlogic:ldapleakpreventer:1.0"/> to the `profile` element.
   1. Add the LDAP-specific properties to the `system-properties` element.
      These properties can be specified at the command line or as environment variables, but must be present at the time the extension is loaded.
